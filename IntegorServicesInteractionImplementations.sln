@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.5.33424.131
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IntegorAuthorizationInteraction", "IntegorAuthorizationInteraction\IntegorAuthorizationInteraction.csproj", "{42AD2D25-33A5-4464-AD93-7FC0A10A7184}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IntegorServicesInteractionHelpers", "IntegorServicesInteractionHelpers\IntegorServicesInteractionHelpers.csproj", "{2DC84CA3-8EAB-49B4-94DA-7022E5F8AAC0}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{42AD2D25-33A5-4464-AD93-7FC0A10A7184}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{42AD2D25-33A5-4464-AD93-7FC0A10A7184}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{42AD2D25-33A5-4464-AD93-7FC0A10A7184}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{42AD2D25-33A5-4464-AD93-7FC0A10A7184}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2DC84CA3-8EAB-49B4-94DA-7022E5F8AAC0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2DC84CA3-8EAB-49B4-94DA-7022E5F8AAC0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2DC84CA3-8EAB-49B4-94DA-7022E5F8AAC0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2DC84CA3-8EAB-49B4-94DA-7022E5F8AAC0}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {1BD15975-2AF0-45AA-9028-6D47C417CF60}
+	EndGlobalSection
+EndGlobal
