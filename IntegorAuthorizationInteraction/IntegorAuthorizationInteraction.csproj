@@ -9,8 +9,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="IntegorServicesInteraction" Version="0.1.0.3" />
-    <PackageReference Include="IntegorSharedResponseDecorators" Version="2.0.0.3" />
+    <PackageReference Include="IntegorServicesInteractionHelpers" Version="0.1.0.2" />
   </ItemGroup>
 
 </Project>
