@@ -5,6 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Text.Json;
 
+using IntegorGlobalConstants;
+
 using IntegorServicesInteraction;
 using IntegorServicesInteraction.Authorization;
 
@@ -49,10 +51,9 @@ namespace IntegorAuthorizationInteraction
 
 		public async Task<ServiceResponse<UserAccountInfoDto>> RefreshAsync(string refreshToken)
 		{
-			// TODO place cookie name to IntegorGlobalConstants
 			Dictionary<string, string> cookie = new Dictionary<string, string>()
 			{
-				{ "AuthenticationRefresh", refreshToken }
+				{ HttpConstants.RefreshTokenCookieName, refreshToken }
 			};
 
 			return await _requestProcessor.ProcessPostAsync(_userParser, _refreshPath, cookie);

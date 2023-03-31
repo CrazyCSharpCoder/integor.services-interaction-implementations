@@ -10,6 +10,8 @@ using System.Net;
 using System.Net.Http;
 using System.Net.Http.Json;
 
+using Microsoft.Net.Http.Headers;
+
 using IntegorErrorsHandling;
 using IntegorResponseDecoration.Parsing;
 
@@ -66,7 +68,7 @@ namespace IntegorServicesInteractionHelpers
 			int statusCode = (int)response.StatusCode;
 			JsonElement body = await JsonSerializer.DeserializeAsync<JsonElement>(responseStream, jsonOptions);
 
-			IEnumerable<string>? setCookieHeaders = response.Headers.Contains(_setCookieHeader) ? response.Headers.GetValues(_setCookieHeader) : null;
+			IEnumerable<string>? setCookieHeaders = response.Headers.Contains(HeaderNames.SetCookie) ? response.Headers.GetValues(_setCookieHeader) : null;
 
 			var parsingResult = parser.ParseDecorated(body);
 
