@@ -17,7 +17,7 @@ using IntegorServicesInteraction;
 
 namespace IntegorServicesInteractionHelpers
 {
-	public abstract partial class JsonServicesRequestProcessor<TServiceConfiguration>
+	public partial class JsonServicesRequestProcessor<TServiceConfiguration>
 		where TServiceConfiguration : ServiceConfiguration
 	{
 		private const string _setCookieHeader = "Set-Cookie";
@@ -38,7 +38,7 @@ namespace IntegorServicesInteractionHelpers
 			_urlPrefix = localUrlPrefix;
 		}
 
-		protected async Task<ServiceResponse<TResult>> ProcessAsync<TBody, TResult>(
+		public async Task<ServiceResponse<TResult>> ProcessAsync<TBody, TResult>(
 			IDecoratedObjectParser<TResult, JsonElement> parser,
 			string localPath, HttpMethod method, TBody dtoBody, Dictionary<string, string>? cookie = null)
 			where TResult : class
@@ -79,7 +79,7 @@ namespace IntegorServicesInteractionHelpers
 			return new ServiceResponse<TResult>((int)response.StatusCode, errors, setCookieHeaders);
 		}
 
-		protected async Task<ServiceResponse<TResult>> ProcessAsync<TBody, TResult>(
+		public async Task<ServiceResponse<TResult>> ProcessAsync<TBody, TResult>(
 			IDecoratedObjectParser<TResult, JsonElement> parser,
 			HttpMethod method, TBody dtoBody, Dictionary<string, string>? cookie = null)
 			where TResult : class
@@ -87,7 +87,7 @@ namespace IntegorServicesInteractionHelpers
 			return await ProcessAsync(parser, "", method, dtoBody, cookie);
 		}
 
-		protected async Task<ServiceResponse<TResult>> ProcessAsync<TResult>(
+		public async Task<ServiceResponse<TResult>> ProcessAsync<TResult>(
 			IDecoratedObjectParser<TResult, JsonElement> parser,
 			string localPath, HttpMethod method, Dictionary<string, string>? cookie = null)
 			where TResult : class
@@ -95,7 +95,7 @@ namespace IntegorServicesInteractionHelpers
 			return await ProcessAsync<object, TResult>(parser, localPath, method, null!, cookie);
 		}
 
-		protected async Task<ServiceResponse<TResult>> ProcessAsync<TResult>(
+		public async Task<ServiceResponse<TResult>> ProcessAsync<TResult>(
 			IDecoratedObjectParser<TResult, JsonElement> parser,
 			HttpMethod method, Dictionary<string, string>? cookie = null)
 			where TResult : class

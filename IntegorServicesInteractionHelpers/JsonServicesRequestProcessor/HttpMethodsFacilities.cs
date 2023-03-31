@@ -14,7 +14,7 @@ namespace IntegorServicesInteractionHelpers
 	public partial class JsonServicesRequestProcessor<TServiceConfiguration>
 		where TServiceConfiguration : ServiceConfiguration
 	{
-		protected async Task<ServiceResponse<TResult>> ProcessGetAsync<TBody, TResult>(
+		public async Task<ServiceResponse<TResult>> ProcessGetAsync<TBody, TResult>(
 			IDecoratedObjectParser<TResult, JsonElement> parser,
 			string localPath, TBody dtoBody, Dictionary<string, string>? cookie = null)
 			where TResult : class
@@ -22,7 +22,7 @@ namespace IntegorServicesInteractionHelpers
 			return await ProcessAsync(parser, localPath, HttpMethod.Get, dtoBody, cookie);
 		}
 
-		protected async Task<ServiceResponse<TResult>> ProcessPostAsync<TBody, TResult>(
+		public async Task<ServiceResponse<TResult>> ProcessPostAsync<TBody, TResult>(
 			IDecoratedObjectParser<TResult, JsonElement> parser,
 			string localPath, TBody dtoBody, Dictionary<string, string>? cookie = null)
 			where TResult : class
@@ -30,7 +30,7 @@ namespace IntegorServicesInteractionHelpers
 			return await ProcessAsync(parser, localPath, HttpMethod.Post, dtoBody, cookie);
 		}
 
-		protected async Task<ServiceResponse<TResult>> ProcessPutAsync<TBody, TResult>(
+		public async Task<ServiceResponse<TResult>> ProcessPutAsync<TBody, TResult>(
 			IDecoratedObjectParser<TResult, JsonElement> parser,
 			string localPath, TBody dtoBody, Dictionary<string, string>? cookie = null)
 			where TResult : class
@@ -38,7 +38,7 @@ namespace IntegorServicesInteractionHelpers
 			return await ProcessAsync(parser, localPath, HttpMethod.Put, dtoBody, cookie);
 		}
 
-		protected async Task<ServiceResponse<TResult>> ProcessDeleteAsync<TBody, TResult>(
+		public async Task<ServiceResponse<TResult>> ProcessDeleteAsync<TBody, TResult>(
 			IDecoratedObjectParser<TResult, JsonElement> parser,
 			string localPath, TBody dtoBody, Dictionary<string, string>? cookie = null)
 			where TResult : class
