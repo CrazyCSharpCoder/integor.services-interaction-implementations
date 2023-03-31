@@ -55,7 +55,7 @@ namespace IntegorServicesInteractionHelpers
 			CookieContainer? cookieContainer = cookie != null ? CreateCookieContainer(cookie) : null;
 
 			using HttpClientHandler handler = CreateHttpClientHandler(cookieContainer);
-			using HttpClient httpClient = new HttpClient(handler) { BaseAddress = new Uri(_configuration.GetFullApiPath()) };
+			using HttpClient httpClient = new HttpClient(handler) { BaseAddress = new Uri(_configuration.Url) };
 
 			using HttpResponseMessage response = await httpClient.SendAsync(request);
 			using Stream responseStream = await response.Content.ReadAsStreamAsync();
