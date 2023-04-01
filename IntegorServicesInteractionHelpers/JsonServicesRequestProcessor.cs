@@ -21,7 +21,7 @@ using ExtensibleRefreshJwtAuthentication.Refresh.Tokens;
 
 namespace IntegorServicesInteractionHelpers
 {
-	public partial class JsonServicesRequestProcessor<TServiceConfiguration>
+	public class JsonServicesRequestProcessor<TServiceConfiguration>
 		where TServiceConfiguration : ServiceConfiguration
 	{
 		private TServiceConfiguration _configuration;
