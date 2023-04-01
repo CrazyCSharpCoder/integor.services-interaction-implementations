@@ -17,6 +17,8 @@ using IntegorErrorsHandling;
 using IntegorResponseDecoration.Parsing;
 
 using IntegorServicesInteractionHelpers;
+using ExtensibleRefreshJwtAuthentication.Access.Tokens;
+using ExtensibleRefreshJwtAuthentication.Refresh.Tokens;
 
 namespace IntegorAuthorizationInteraction
 {
@@ -32,11 +34,14 @@ namespace IntegorAuthorizationInteraction
 
 		public AuthorizationServiceAuthApi(
 			AuthorizationServiceConfiguration configuration,
+			ISendRequestAccessTokenAccessor accessTokenAccessor,
+			ISendRequestRefreshTokenAccessor refreshTokenAccessor,
 			IDecoratedObjectParser<IEnumerable<IResponseError>, JsonElement> errorsParser,
 			IDecoratedObjectParser<UserAccountInfoDto, JsonElement> userParser)
         {
 			_userParser = userParser;
-			_requestProcessor = new JsonServicesRequestProcessor<AuthorizationServiceConfiguration>(configuration, errorsParser, "auth");
+			_requestProcessor = new JsonServicesRequestProcessor<AuthorizationServiceConfiguration>(
+				configuration, accessTokenAccessor, refreshTokenAccessor, errorsParser, "auth");
 		}
 
 		public async Task<ServiceResponse<UserAccountInfoDto>> RegisterAsync(RegisterUserDto dto)
@@ -51,12 +56,7 @@ namespace IntegorAuthorizationInteraction
 
 		public async Task<ServiceResponse<UserAccountInfoDto>> RefreshAsync(string refreshToken)
 		{
-			Dictionary<string, string> cookie = new Dictionary<string, string>()
-			{
-				{ HttpConstants.RefreshTokenCookieName, refreshToken }
-			};
-
-			return await _requestProcessor.ProcessPostAsync(_userParser, _refreshPath, cookie);
+			return await _requestProcessor.ProcessPostAsync(_userParser, _refreshPath, AuthenticationMethods.Refresh, refreshToken);
 		}
 	}
 }
