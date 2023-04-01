@@ -15,35 +15,35 @@ namespace IntegorServicesInteractionHelpers
 		where TServiceConfiguration : ServiceConfiguration
 	{
 		public async Task<ServiceResponse<TResult>> ProcessGetAsync<TResult>(
-			IDecoratedObjectParser<TResult, JsonElement> parser,
-			string localPath, Dictionary<string, string>? cookie = null)
+			IDecoratedObjectParser<TResult, JsonElement> parser, string localPath = "",
+			AuthenticationMethods authMethod = AuthenticationMethods.None, string? authenticationToken = null)
 			where TResult : class
 		{
-			return await ProcessAsync(parser, localPath, HttpMethod.Get, cookie);
+			return await ProcessAsync(parser, HttpMethod.Get, localPath, authMethod, authenticationToken);
 		}
 
 		public async Task<ServiceResponse<TResult>> ProcessPostAsync<TResult>(
-			IDecoratedObjectParser<TResult, JsonElement> parser,
-			string localPath, Dictionary<string, string>? cookie = null)
+			IDecoratedObjectParser<TResult, JsonElement> parser, string localPath = "",
+			AuthenticationMethods authMethod = AuthenticationMethods.None, string? authenticationToken = null)
 			where TResult : class
 		{
-			return await ProcessAsync(parser, localPath, HttpMethod.Post, cookie);
+			return await ProcessAsync(parser, HttpMethod.Post, localPath, authMethod, authenticationToken);
 		}
 
 		public async Task<ServiceResponse<TResult>> ProcessPutAsync<TResult>(
-			IDecoratedObjectParser<TResult, JsonElement> parser,
-			string localPath, Dictionary<string, string>? cookie = null)
+			IDecoratedObjectParser<TResult, JsonElement> parser, string localPath = "",
+			AuthenticationMethods authMethod = AuthenticationMethods.None, string? authenticationToken = null)
 			where TResult : class
 		{
-			return await ProcessAsync(parser, localPath, HttpMethod.Put, cookie);
+			return await ProcessAsync(parser, HttpMethod.Put, localPath, authMethod, authenticationToken);
 		}
 
 		public async Task<ServiceResponse<TResult>> ProcessDeleteAsync<TResult>(
-			IDecoratedObjectParser<TResult, JsonElement> parser,
-			string localPath, Dictionary<string, string>? cookie = null)
+			IDecoratedObjectParser<TResult, JsonElement> parser, string localPath = "",
+			AuthenticationMethods authMethod = AuthenticationMethods.None, string? authenticationToken = null)
 			where TResult : class
 		{
-			return await ProcessAsync(parser, localPath, HttpMethod.Delete, cookie);
+			return await ProcessAsync(parser, HttpMethod.Delete, localPath, authMethod, authenticationToken);
 		}
 	}
 }
