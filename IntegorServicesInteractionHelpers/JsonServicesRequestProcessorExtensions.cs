@@ -12,7 +12,7 @@ namespace IntegorServicesInteractionHelpers
 {
 	public static class JsonServicesRequestProcessorExtensions
 	{
-		public static async Task<ServiceResponse<TResult>> ProcessGetAsync<TServiceConfiguration, TBody, TResult>(
+		public static async Task<ServiceResponse<TResult>> GetAsync<TServiceConfiguration, TBody, TResult>(
 			this JsonServicesRequestProcessor<TServiceConfiguration> requestProcessor,
 			IDecoratedObjectParser<TResult, JsonElement> parser,
 			string localPath = "", TBody? dtoBody = null,
@@ -24,7 +24,7 @@ namespace IntegorServicesInteractionHelpers
 			return await requestProcessor.ProcessAsync(parser, HttpMethod.Get, localPath, dtoBody, authMethod, authenticationToken);
 		}
 
-		public static async Task<ServiceResponse<TResult>> ProcessPostAsync<TServiceConfiguration, TBody, TResult>(
+		public static async Task<ServiceResponse<TResult>> PostAsync<TServiceConfiguration, TBody, TResult>(
 			this JsonServicesRequestProcessor<TServiceConfiguration> requestProcessor,
 			IDecoratedObjectParser<TResult, JsonElement> parser,
 			string localPath = "", TBody? dtoBody = null,
@@ -36,7 +36,7 @@ namespace IntegorServicesInteractionHelpers
 			return await requestProcessor.ProcessAsync(parser, HttpMethod.Post, localPath, dtoBody, authMethod, authenticationToken);
 		}
 
-		public static async Task<ServiceResponse<TResult>> ProcessPutAsync<TServiceConfiguration, TBody, TResult>(
+		public static async Task<ServiceResponse<TResult>> PutAsync<TServiceConfiguration, TBody, TResult>(
 			this JsonServicesRequestProcessor<TServiceConfiguration> requestProcessor,
 			IDecoratedObjectParser<TResult, JsonElement> parser,
 			string localPath = "", TBody? dtoBody = null,
@@ -48,7 +48,7 @@ namespace IntegorServicesInteractionHelpers
 			return await requestProcessor.ProcessAsync(parser, HttpMethod.Put, localPath, dtoBody, authMethod, authenticationToken);
 		}
 
-		public static async Task<ServiceResponse<TResult>> ProcessDeleteAsync<TServiceConfiguration, TBody, TResult>(
+		public static async Task<ServiceResponse<TResult>> DeleteAsync<TServiceConfiguration, TBody, TResult>(
 			this JsonServicesRequestProcessor<TServiceConfiguration> requestProcessor,
 			IDecoratedObjectParser<TResult, JsonElement> parser,
 			string localPath = "", TBody? dtoBody = null,
@@ -61,7 +61,7 @@ namespace IntegorServicesInteractionHelpers
 		}
 
 		// For no body
-		public static async Task<ServiceResponse<TResult>> ProcessGetAsync<TServiceConfiguration, TResult>(
+		public static async Task<ServiceResponse<TResult>> GetAsync<TServiceConfiguration, TResult>(
 			this JsonServicesRequestProcessor<TServiceConfiguration> requestProcessor,
 			IDecoratedObjectParser<TResult, JsonElement> parser, string localPath = "",
 			AuthenticationMethods authMethod = AuthenticationMethods.None, string? authenticationToken = null)
@@ -71,7 +71,7 @@ namespace IntegorServicesInteractionHelpers
 			return await requestProcessor.ProcessAsync(parser, HttpMethod.Get, localPath, authMethod, authenticationToken);
 		}
 
-		public static async Task<ServiceResponse<TResult>> ProcessPostAsync<TServiceConfiguration, TResult>(
+		public static async Task<ServiceResponse<TResult>> PostAsync<TServiceConfiguration, TResult>(
 			this JsonServicesRequestProcessor<TServiceConfiguration> requestProcessor,
 			IDecoratedObjectParser<TResult, JsonElement> parser, string localPath = "",
 			AuthenticationMethods authMethod = AuthenticationMethods.None, string? authenticationToken = null)
@@ -81,7 +81,7 @@ namespace IntegorServicesInteractionHelpers
 			return await requestProcessor.ProcessAsync(parser, HttpMethod.Post, localPath, authMethod, authenticationToken);
 		}
 
-		public static async Task<ServiceResponse<TResult>> ProcessPutAsync<TServiceConfiguration, TResult>(
+		public static async Task<ServiceResponse<TResult>> PutAsync<TServiceConfiguration, TResult>(
 			this JsonServicesRequestProcessor<TServiceConfiguration> requestProcessor,
 			IDecoratedObjectParser<TResult, JsonElement> parser, string localPath = "",
 			AuthenticationMethods authMethod = AuthenticationMethods.None, string? authenticationToken = null)
@@ -91,7 +91,7 @@ namespace IntegorServicesInteractionHelpers
 			return await requestProcessor.ProcessAsync(parser, HttpMethod.Put, localPath, authMethod, authenticationToken);
 		}
 
-		public static async Task<ServiceResponse<TResult>> ProcessDeleteAsync<TServiceConfiguration, TResult>(
+		public static async Task<ServiceResponse<TResult>> DeleteAsync<TServiceConfiguration, TResult>(
 			this JsonServicesRequestProcessor<TServiceConfiguration> requestProcessor,
 			IDecoratedObjectParser<TResult, JsonElement> parser, string localPath = "",
 			AuthenticationMethods authMethod = AuthenticationMethods.None, string? authenticationToken = null)
