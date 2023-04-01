@@ -20,20 +20,19 @@ using ExtensibleRefreshJwtAuthentication.Refresh.Tokens;
 
 namespace IntegorAuthorizationInteraction
 {
-	public class AuthorizationServiceAuthApi : IAuthorizationServiceAuthApi
+	public class AuthorizationServiceUsersApi : IAuthorizationServiceUsersApi
 	{
-		private const string _apiPrefix = "auth";
+		private const string _apiPrefix = "users";
 
-		private const string _registerPath = "register";
-		private const string _loginPath = "login";
-		private const string _refreshPath = "refresh";
+		private const string _getMePath = "me";
+		private const string _getByIdPath = "by-id/{0}";
+		private const string _getByEmailPath = "by-email/{0}";
 
 		private JsonServicesRequestProcessor<AuthorizationServiceConfiguration> _requestProcessor;
 
 		private IDecoratedObjectParser<UserAccountInfoDto, JsonElement> _userParser;
 
-		public AuthorizationServiceAuthApi(
-			AuthorizationServiceConfiguration configuration,
+		public AuthorizationServiceUsersApi(AuthorizationServiceConfiguration configuration,
 			ISendRequestAccessTokenAccessor accessTokenAccessor,
 			ISendRequestRefreshTokenAccessor refreshTokenAccessor,
 			IDecoratedObjectParser<IEnumerable<IResponseError>, JsonElement> errorsParser,
@@ -44,19 +43,19 @@ namespace IntegorAuthorizationInteraction
 				configuration, accessTokenAccessor, refreshTokenAccessor, errorsParser, _apiPrefix);
 		}
 
-		public async Task<ServiceResponse<UserAccountInfoDto>> RegisterAsync(RegisterUserDto dto)
+        public Task<ServiceResponse<UserAccountInfoDto>> GetMeAsync(string accessToken)
 		{
-			return await _requestProcessor.PostAsync(_userParser, _registerPath, dto);
+			return _requestProcessor.GetAsync(_userParser, _getMePath, AuthenticationMethods.Access, accessToken);
 		}
 
-		public async Task<ServiceResponse<UserAccountInfoDto>> LoginAsync(LoginUserDto dto)
+		public Task<ServiceResponse<UserAccountInfoDto>> GetByIdAsync(int id)
 		{
-			return await _requestProcessor.PostAsync(_userParser, _loginPath, dto);
+			return _requestProcessor.GetAsync(_userParser, string.Format(_getByIdPath, id));
 		}
 
-		public async Task<ServiceResponse<UserAccountInfoDto>> RefreshAsync(string refreshToken)
+		public Task<ServiceResponse<UserAccountInfoDto>> GetByEmailAsync(string email)
 		{
-			return await _requestProcessor.PostAsync(_userParser, _refreshPath, AuthenticationMethods.Refresh, refreshToken);
+			return _requestProcessor.GetAsync(_userParser, string.Format(_getByEmailPath, email));
 		}
 	}
 }
