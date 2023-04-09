@@ -13,6 +13,7 @@ using IntegorErrorsHandling;
 using IntegorResponseDecoration.Parsing;
 
 using IntegorServicesInteraction;
+using IntegorServicesInteraction.Exceptions;
 
 using ExtensibleRefreshJwtAuthentication.TokenServices;
 
@@ -65,7 +66,7 @@ namespace IntegorServicesInteractionHelpers
 			using HttpContent content = JsonContent.Create(dtoBody);
 			NetHttpRequestContext context = CreateNetHttpRequestContext(_configuration.Url, content, authMethod, authenticationToken);
 
-			using HttpClient httpClient = context.HttpClient; ;
+			using HttpClient httpClient = context.HttpClient;
 			using HttpClientHandler? handler = context.HttpClientHandler;
 
 			HttpRequestMessage request = new HttpRequestMessage(method, Path.Combine(_urlPrefix, localPath))
@@ -73,7 +74,17 @@ namespace IntegorServicesInteractionHelpers
 				Content = content
 			};
 
-			using HttpResponseMessage response = await httpClient.SendAsync(request);
+			HttpResponseMessage? response = null;
+
+			try
+			{
+				response = await httpClient.SendAsync(request);
+			}
+			catch (Exception exc)
+			{
+				throw new ServiceConnectionFailedException(exc);
+			}
+
 			using Stream responseStream = await response.Content.ReadAsStreamAsync();
 
 			JsonSerializerOptions jsonOptions = new JsonSerializerOptions()
@@ -81,7 +92,12 @@ namespace IntegorServicesInteractionHelpers
 				PropertyNameCaseInsensitive = true
 			};
 
-			return await ParseResponseAsync(response, jsonOptions, parser, _accessTokenAccessor, _refreshTokenAccessor);
+			ServiceResponse<TResult> serviceResponse = await ParseResponseAsync(
+				response, jsonOptions, parser,
+				_accessTokenAccessor, _refreshTokenAccessor);
+			response.Dispose();
+
+			return serviceResponse;
 		}
 
 		private NetHttpRequestContext? AuthenticateNetHttpRequestContext(string baseUrl, HttpContent content, AuthenticationMethods authMethod, string? authToken)
