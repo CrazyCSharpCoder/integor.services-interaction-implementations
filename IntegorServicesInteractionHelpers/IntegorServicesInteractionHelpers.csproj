@@ -5,11 +5,11 @@
     <ImplicitUsings>disable</ImplicitUsings>
     <Nullable>enable</Nullable>
 	<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-	<VersionPrefix>0.1.0.11</VersionPrefix>
+	<VersionPrefix>0.1.0.12</VersionPrefix>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="ExtensibleRefreshJwtAuthentication" Version="1.0.0.6" />
+    <PackageReference Include="ExtensibleRefreshJwtAuthentication" Version="1.0.0.7" />
     <PackageReference Include="IntegorServicesInteraction" Version="0.1.0.12" />
     <PackageReference Include="IntegorSharedResponseDecorators" Version="2.0.0.6" />
   </ItemGroup>

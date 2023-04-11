@@ -15,8 +15,8 @@ using IntegorErrorsHandling;
 using IntegorResponseDecoration.Parsing;
 
 using IntegorServicesInteractionHelpers;
-using ExtensibleRefreshJwtAuthentication.Access.Tokens;
-using ExtensibleRefreshJwtAuthentication.Refresh.Tokens;
+using ExtensibleRefreshJwtAuthentication.Access;
+using ExtensibleRefreshJwtAuthentication.Refresh;
 
 namespace IntegorAuthorizationInteraction
 {
