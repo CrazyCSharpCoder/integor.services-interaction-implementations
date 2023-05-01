@@ -9,7 +9,6 @@ using IntegorServicesInteraction;
 using IntegorServicesInteraction.Authorization;
 
 using IntegorPublicDto.Authorization.Users;
-using IntegorPublicDto.Authorization.Users.Input;
 
 using IntegorErrorsHandling;
 using IntegorResponseDecoration.Parsing;
@@ -24,7 +23,6 @@ namespace IntegorAuthorizationInteraction
 	{
 		private const string _apiPrefix = "users";
 
-		private const string _getMePath = "me";
 		private const string _getByIdPath = "by-id/{0}";
 		private const string _getByEmailPath = "by-email/{0}";
 
@@ -41,11 +39,6 @@ namespace IntegorAuthorizationInteraction
 			_userParser = userParser;
 			_requestProcessor = new JsonServicesRequestProcessor<AuthorizationServiceConfiguration>(
 				configuration, accessTokenAccessor, refreshTokenAccessor, errorsParser, _apiPrefix);
-		}
-
-        public Task<ServiceResponse<UserAccountInfoDto>> GetMeAsync(string accessToken)
-		{
-			return _requestProcessor.GetAsync(_userParser, _getMePath, AuthenticationMethods.Access, accessToken);
 		}
 
 		public Task<ServiceResponse<UserAccountInfoDto>> GetByIdAsync(int id)

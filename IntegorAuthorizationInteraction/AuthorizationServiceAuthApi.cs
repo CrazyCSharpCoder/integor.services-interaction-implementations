@@ -24,6 +24,7 @@ namespace IntegorAuthorizationInteraction
 	{
 		private const string _apiPrefix = "auth";
 
+		private const string _getMePath = "me";
 		private const string _registerPath = "register";
 		private const string _loginPath = "login";
 		private const string _refreshPath = "refresh";
@@ -52,6 +53,11 @@ namespace IntegorAuthorizationInteraction
 		public async Task<ServiceResponse<UserAccountInfoDto>> LoginAsync(LoginUserDto dto)
 		{
 			return await _requestProcessor.PostAsync(_userParser, _loginPath, dto);
+		}
+
+		public Task<ServiceResponse<UserAccountInfoDto>> GetMeAsync(string accessToken)
+		{
+			return _requestProcessor.GetAsync(_userParser, _getMePath, AuthenticationMethods.Access, accessToken);
 		}
 
 		public async Task<ServiceResponse<UserAccountInfoDto>> RefreshAsync(string refreshToken)
