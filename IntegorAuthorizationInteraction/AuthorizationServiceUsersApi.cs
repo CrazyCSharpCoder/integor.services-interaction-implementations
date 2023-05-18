@@ -2,8 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using System.Text.Json;
+using System.Threading.Tasks;
+
+using System.Net.Http;
+
+using Microsoft.Extensions.Options;
 
 using IntegorServicesInteraction;
 using IntegorServicesInteraction.Authorization;
@@ -14,8 +18,6 @@ using IntegorErrorsHandling;
 using IntegorResponseDecoration.Parsing;
 
 using IntegorServicesInteractionHelpers;
-using ExtensibleRefreshJwtAuthentication.Access;
-using ExtensibleRefreshJwtAuthentication.Refresh;
 
 namespace IntegorAuthorizationInteraction
 {
@@ -30,25 +32,28 @@ namespace IntegorAuthorizationInteraction
 
 		private IDecoratedObjectParser<UserAccountInfoDto, JsonElement> _userParser;
 
-		public AuthorizationServiceUsersApi(AuthorizationServiceConfiguration configuration,
-			ISendRequestAccessTokenAccessor accessTokenAccessor,
-			ISendRequestRefreshTokenAccessor refreshTokenAccessor,
+		public AuthorizationServiceUsersApi(
 			IDecoratedObjectParser<IEnumerable<IResponseError>, JsonElement> errorsParser,
-			IDecoratedObjectParser<UserAccountInfoDto, JsonElement> userParser)
+			IDecoratedObjectParser<UserAccountInfoDto, JsonElement> userParser,
+			IOptions<AuthorizationServiceConfiguration> serviceOptions)
         {
 			_userParser = userParser;
-			_requestProcessor = new JsonServicesRequestProcessor<AuthorizationServiceConfiguration>(
-				configuration, accessTokenAccessor, refreshTokenAccessor, errorsParser, _apiPrefix);
+
+			_requestProcessor =
+				new JsonServicesRequestProcessor<AuthorizationServiceConfiguration>(
+					errorsParser, serviceOptions, _apiPrefix);
 		}
 
-		public Task<ServiceResponse<UserAccountInfoDto>> GetByIdAsync(int id)
+		public async Task<ServiceResponse<UserAccountInfoDto>> GetByIdAsync(int id)
 		{
-			return _requestProcessor.GetAsync(_userParser, string.Format(_getByIdPath, id));
+			string path = string.Format(_getByIdPath, id);
+			return await _requestProcessor.ProcessAsync(_userParser, HttpMethod.Get, path);
 		}
 
-		public Task<ServiceResponse<UserAccountInfoDto>> GetByEmailAsync(string email)
+		public async Task<ServiceResponse<UserAccountInfoDto>> GetByEmailAsync(string email)
 		{
-			return _requestProcessor.GetAsync(_userParser, string.Format(_getByEmailPath, email));
+			string path = string.Format(_getByEmailPath, email);
+			return await _requestProcessor.ProcessAsync(_userParser, HttpMethod.Get, path);
 		}
 	}
 }
