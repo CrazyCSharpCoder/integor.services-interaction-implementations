@@ -5,11 +5,11 @@
     <ImplicitUsings>disable</ImplicitUsings>
     <Nullable>enable</Nullable>
 	<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-	<VersionPrefix>0.1.0.12</VersionPrefix>
+	<VersionPrefix>1.0.0</VersionPrefix>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="IntegorServicesInteractionHelpers" Version="0.1.0.14" />
+    <PackageReference Include="IntegorServicesInteractionHelpers" Version="1.0.0" />
   </ItemGroup>
 
 </Project>
