@@ -4,127 +4,77 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-using System.IO;
 using System.Text.Json;
-using System.Net;
 using System.Net.Http;
 using System.Net.Http.Json;
+
+using Microsoft.Extensions.Options;
 
 using IntegorErrorsHandling;
 using IntegorResponseDecoration.Parsing;
 
-using IntegorPublicDto.Authorization.Users;
 using IntegorServicesInteraction;
+
+using IntegorServicesInteractionHelpers.Internal;
 
 namespace IntegorServicesInteractionHelpers
 {
-	public abstract class JsonServicesRequestProcessor<TServiceConfiguration>
-		where TServiceConfiguration : ServiceConfiguration
+	public class JsonServicesRequestProcessor<TServiceConfiguration>
+		where TServiceConfiguration : ServiceConfiguration, new()
 	{
-		private TServiceConfiguration _configuration;
 		private IDecoratedObjectParser<IEnumerable<IResponseError>, JsonElement> _errorsParser;
+		private TServiceConfiguration _configuration;
+
+		private string _urlPrefix;
 
 		public JsonServicesRequestProcessor(
-			TServiceConfiguration configuration,
-			IDecoratedObjectParser<IEnumerable<IResponseError>, JsonElement> errorsParser)
+			IDecoratedObjectParser<IEnumerable<IResponseError>, JsonElement> errorsParser,
+			IOptions<TServiceConfiguration> serviceOptions,
+
+			string localUrlPrefix = "")
         {
-			_configuration = configuration;
 			_errorsParser = errorsParser;
+			_configuration = serviceOptions.Value;
+
+			_urlPrefix = localUrlPrefix;
 		}
 
-		protected async Task<ServiceResponse<TResult>> ProcessAsync<TBody, TResult>(
+		public async Task<ServiceResponse<TResult>> ProcessAsync<TBody, TResult>(
 			IDecoratedObjectParser<TResult, JsonElement> parser,
-			HttpMethod method, string localPath, TBody dtoBody, Dictionary<string, string>? cookie = null)
+			HttpMethod method, string localPath = "", Dictionary<string, string>? queryParameters = null,
+			TBody? dtoBody = null)
+			where TBody : class
 			where TResult : class
 		{
-			HttpContent content = JsonContent.Create(dtoBody);
+			string url = NetHttpRequestsHelpers.ComposeLocalUrl(queryParameters, _urlPrefix, localPath);
+			using HttpContent content = JsonContent.Create(dtoBody);
 
-			HttpRequestMessage request = new HttpRequestMessage(method, localPath)
+			using HttpClient httpClient = new HttpClient() { BaseAddress = new Uri(_configuration.Url) };
+
+			using HttpRequestMessage request = new HttpRequestMessage(method, url)
 			{
 				Content = content
 			};
 
-			CookieContainer? cookieContainer = cookie != null ? CreateCookieContainer(cookie) : null;
-
-			using HttpClientHandler handler = CreateHttpClientHandler(cookieContainer);
-			using HttpClient httpClient = new HttpClient(handler) { BaseAddress = new Uri(_configuration.GetFullApiPath()) };
-
 			using HttpResponseMessage response = await httpClient.SendAsync(request);
-			using Stream responseStream = await response.Content.ReadAsStreamAsync();
 
 			JsonSerializerOptions jsonOptions = new JsonSerializerOptions()
 			{
 				PropertyNameCaseInsensitive = true
 			};
 
-			int statusCode = (int)response.StatusCode;
-			// TODO make Set-Cookie as constant
-			IEnumerable<string> setCookies = response.Headers.GetValues("Set-Cookie");
-			JsonElement body = await JsonSerializer.DeserializeAsync<JsonElement>(responseStream, jsonOptions);
-
-			var parsingResult = parser.ParseDecorated(body);
-
-			if (parsingResult.Success)
-				// TODO append cookies
-				return new ServiceResponse<TResult>(statusCode, parsingResult.Value, setCookies);
-
-			// TODO consider situations when authorization microservice is switched off
-			var errorDecorationResult = _errorsParser.ParseDecorated(body);
-			IEnumerable<IResponseError> errors = errorDecorationResult.Value!;
-
-			return new ServiceResponse<TResult>((int)response.StatusCode, errors, setCookies);
+			return await NetHttpRequestsHelpers.ParseJsonResponseAsync(
+				response, jsonOptions,
+				_errorsParser, parser);
 		}
 
-		private CookieContainer CreateCookieContainer(Dictionary<string, string> cookie)
-		{
-			CookieContainer container = new CookieContainer();
-
-			foreach (KeyValuePair<string, string> cookieEntry in cookie)
-				container.Add(new Cookie(cookieEntry.Key, cookieEntry.Value));
-
-			return container;
-		}
-
-		private HttpClientHandler CreateHttpClientHandler(CookieContainer? cookieContainer)
-		{
-			HttpClientHandler handler = new HttpClientHandler();
-
-			if (cookieContainer != null)
-				handler.CookieContainer = cookieContainer;
-
-			return handler;
-		}
-
-		protected async Task<ServiceResponse<TResult>> ProcessGetAsync<TBody, TResult>(
+		public async Task<ServiceResponse<TResult>> ProcessAsync<TResult>(
 			IDecoratedObjectParser<TResult, JsonElement> parser,
-			string localPath, TBody dtoBody, Dictionary<string, string>? cookie = null)
+			HttpMethod method, string localPath = "", Dictionary<string, string>? queryParameters = null)
+
 			where TResult : class
 		{
-			return await ProcessAsync(parser, HttpMethod.Get, localPath, dtoBody, cookie);
-		}
-
-		protected async Task<ServiceResponse<TResult>> ProcessPostAsync<TBody, TResult>(
-			IDecoratedObjectParser<TResult, JsonElement> parser,
-			string localPath, TBody dtoBody, Dictionary<string, string>? cookie = null)
-			where TResult : class
-		{
-			return await ProcessAsync(parser, HttpMethod.Post, localPath, dtoBody, cookie);
-		}
-
-		protected async Task<ServiceResponse<TResult>> ProcessPutAsync<TBody, TResult>(
-			IDecoratedObjectParser<TResult, JsonElement> parser,
-			string localPath, TBody dtoBody, Dictionary<string, string>? cookie = null)
-			where TResult : class
-		{
-			return await ProcessAsync(parser, HttpMethod.Put, localPath, dtoBody, cookie);
-		}
-
-		protected async Task<ServiceResponse<TResult>> ProcessDeleteAsync<TBody, TResult>(
-			IDecoratedObjectParser<TResult, JsonElement> parser,
-			string localPath, TBody dtoBody, Dictionary<string, string>? cookie = null)
-			where TResult : class
-		{
-			return await ProcessAsync(parser, HttpMethod.Delete, localPath, dtoBody, cookie);
+			return await ProcessAsync<object, TResult>(parser, method, localPath, queryParameters, null);
 		}
 	}
 }
